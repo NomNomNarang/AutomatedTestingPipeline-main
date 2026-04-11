@@ -190,7 +190,7 @@ The project is structured to make adding more tests trivial:
 To add a new CI job (e.g. integration tests, Docker build), add another `job` block in `ci.yml` — it will run in parallel by default unless you add a `needs:` dependency.
 
 ---
-
+Testing CI pipeline
 ## 📄 License
 
 MIT
