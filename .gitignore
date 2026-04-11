@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Misc
+.DS_Store
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
