@@ -11,8 +11,8 @@ function sum(arr) {
   if (!Array.isArray(arr)) {
     throw new TypeError("Input must be an array.");
   }
-   return arr.reduce((acc, val) => acc + val, 0);
-  // return 0;
+   //return arr.reduce((acc, val) => acc + val, 0);
+   return 0;
 }
 
 /**
