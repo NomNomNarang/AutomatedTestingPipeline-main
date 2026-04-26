@@ -1,6 +1,5 @@
 # -------------------------------------------------------------------
 # GitHub Actions CI — Test & Lint Pipeline
-# Triggers on every Pull Request targeting the `main` branch.
 # -------------------------------------------------------------------
 name: CI
 
@@ -8,32 +7,26 @@ on:
   pull_request:
     branches:
       - main
-  # Allow manual runs from the Actions tab for debugging.
   workflow_dispatch:
 
-# Minimal, least-privilege permissions (read-only repo content).
 permissions:
   contents: read
 
 jobs:
-  # ────────────────────────────────────────────────────────────────
-  # JOB 1 — Unit Tests + Coverage Upload
-  # ────────────────────────────────────────────────────────────────
+  # -------------------------------
+  # JOB 1 — Unit Tests
+  # -------------------------------
   test:
     name: "🧪 Unit Tests (Node ${{ matrix.node-version }})"
     runs-on: ubuntu-latest
 
     strategy:
-      # Test on the two most recent LTS releases.
       matrix:
         node-version: ["18.x", "20.x"]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        # Pin to a specific commit SHA for supply-chain security.
-        # SHA corresponds to actions/checkout v4.1.1
-        # uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -49,23 +42,9 @@ jobs:
         env:
           CI: true
 
-      - name: Upload coverage report to Codecov
-        # Only upload from the primary Node version to avoid duplicate reports.
-        if: matrix.node-version == '20.x'
-        uses: codecov/codecov-action@v3
-        with:
-          # Set CODECOV_TOKEN as a repository secret in GitHub → Settings → Secrets.
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: "node-ci-coverage"
-          # Fail the job if the upload itself errors, to surface problems early.
-          fail_ci_if_error: true
-          verbose: false
-
-  # ────────────────────────────────────────────────────────────────
-  # JOB 2 — ESLint Linting (runs in PARALLEL with the test job)
-  # ────────────────────────────────────────────────────────────────
+  # -------------------------------
+  # JOB 2 — Linting
+  # -------------------------------
   lint:
     name: "🔍 ESLint Linting"
     runs-on: ubuntu-latest
@@ -77,7 +56,6 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          # Lint only needs a single Node version.
           node-version: "20.x"
           cache: "npm"
 
